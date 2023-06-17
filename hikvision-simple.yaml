@@ -1,0 +1,105 @@
+zabbix_export:
+  version: '6.4'
+  template_groups:
+    - uuid: 7df96b18c230490a9a0a9e2307226338
+      name: Templates
+  templates:
+    - uuid: 019a08d780184db7aea7396f0bb90da0
+      template: 'Hikvision simple'
+      name: 'Hikvision simple'
+      templates:
+        - name: 'Template Module ICMP Ping'
+      groups:
+        - name: Templates
+      items:
+        - uuid: c19d1a0b18e343c3858f2d82709a8d6f
+          name: 'CPU utilization'
+          type: SNMP_AGENT
+          snmp_oid: 'SNMPv2-SMI::enterprises.39165.1.7.0'
+          key: system.cpu.util
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - (.\d+)
+                - \0
+        - uuid: 02f35c0c66c94c39b45b622ea158a6d6
+          name: 'Disk utilization'
+          type: SNMP_AGENT
+          snmp_oid: 'SNMPv2-SMI::enterprises.39165.1.9.0'
+          key: system.disk.utilization
+          delay: 10m
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - ^(\d+)
+                - \0
+        - uuid: a17af5b95a224afa872f3a144073d8b0
+          name: 'Static IP address'
+          type: SNMP_AGENT
+          snmp_oid: 'SNMPv2-SMI::enterprises.39165.1.16.0'
+          key: system.fw.ip
+          delay: 10m
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 1d
+          tags:
+            - tag: component
+              value: network
+        - uuid: fbcea377eb8347b5b0d512a0c97019c1
+          name: 'Firmware version'
+          type: SNMP_AGENT
+          snmp_oid: 'SNMPv2-SMI::enterprises.39165.1.3.0'
+          key: system.hw.firmware
+          delay: 1h
+          trends: '0'
+          value_type: TEXT
+          tags:
+            - tag: component
+              value: system
+        - uuid: b1f077cbf10e436e8006c780cf3b0994
+          name: 'MAC address'
+          type: SNMP_AGENT
+          snmp_oid: 'SNMPv2-SMI::enterprises.39165.1.4.0'
+          key: system.hw.mac
+          delay: 1h
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 1d
+          tags:
+            - tag: component
+              value: system
+        - uuid: daffe86c5cf3403c9e8fd15f2e9a8728
+          name: Model
+          type: SNMP_AGENT
+          snmp_oid: 'SNMPv2-SMI::enterprises.39165.1.1.0'
+          key: system.hw.model
+          delay: 1h
+          trends: '0'
+          value_type: TEXT
+          tags:
+            - tag: component
+              value: system
+        - uuid: bbeee0f6511d467d9ab66561ca90766f
+          name: 'RAM size'
+          type: SNMP_AGENT
+          snmp_oid: 'SNMPv2-SMI::enterprises.39165.1.10.0'
+          key: system.memsize
+          delay: 1h
+          trends: '0'
+          value_type: TEXT
+        - uuid: 793fcc7440864915bae2bac8b18366c4
+          name: 'RAM utilization'
+          type: SNMP_AGENT
+          snmp_oid: 'SNMPv2-SMI::enterprises.39165.1.11.0'
+          key: system.ram.util
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - ^(\d+)
+                - \0
